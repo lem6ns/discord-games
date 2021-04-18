@@ -13,7 +13,9 @@ const links = [
     "https://i.imgur.com/pLj6IR5.png",
     "https://i.imgur.com/fcR8UU7.png",
     "https://i.imgur.com/6Hw06Sk.png",
-    "https://i.imgur.com/8iUdkeQ.png"
+    "https://i.imgur.com/8iUdkeQ.png",
+    "https://i.imgur.com/i6J45b8.png",
+    "https://i.imgur.com/7hiWShe.png"
 ];
 const app = express();
 const port = 1935;
@@ -34,7 +36,7 @@ app.post('/create', parser, (req, res) => {
         })
         return;
     }
-    if (!/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g.test(req.body.yt)) {
+    if (!/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g.test(req.body.yt)) {
         res.render("index", {
             yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
             image: "https://i.imgur.com/pLj6IR5.png",
