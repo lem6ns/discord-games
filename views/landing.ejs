@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta property="og:title" content="Discord Games" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://discord-games.respecting.repl.co/" />
+        <meta property="og:description" content="A new Discord feature to rickroll your friends!" />
+        <meta name="theme-color" content="#FF0000">
+        <style>
+            body {
+                text-align: center;
+                background-color: #121212;
+                color:white;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            div {
+                border-radius: 10px;
+                border: white solid;
+                width: 10%;
+                padding: 30px;
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 45%;
+                transform: translateY(-50%);
+            }
+            h1 {
+                border: white solid;
+                display: inline;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <form action="/create" method="POST">  
+                Image: <select name="images" id="image">
+                    <option value="https://i.imgur.com/nJdB00j.png">Fortnite</option>
+                    <option value="https://i.imgur.com/pLj6IR5.png">Minecraft</option>
+                    <option value="https://i.imgur.com/fcR8UU7.png">Roblox</option>
+                    <option value="https://i.imgur.com/6Hw06Sk.png">COD: Warzone</option>
+                    <option value="https://i.imgur.com/8iUdkeQ.png">Among Us</option>
+                  </select>  <br>  <br>
+                Youtube Link: <input type="text" name="yt" pattern="http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?" title="Input a youtube link." required>  <br><br>
+                <input type="submit" value="Submit">  
+                </form>  
+        </div>
+    </body>
+</html>

@@ -21,12 +21,7 @@ const port = 1935;
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.render("index", {
-        yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-        image: "https://i.imgur.com/pLj6IR5.png",
-        ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        link: ""
-    });
+    res.render("landing")
 })
 
 app.post('/create', parser, (req, res) => {
@@ -70,7 +65,8 @@ app.get('/get', (req, res) => {
         res.render("index", {
             yt: new URLSearchParams(new URL(doc.youtube).search).get("v"),
             image: doc.image,
-            ytLink: doc.youtube
+            ytLink: doc.youtube,
+            link: ""
         });
     })
 })
