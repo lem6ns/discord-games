@@ -8,6 +8,13 @@ const db = new Datastore({
     filename: "links",
     autoload: true
 });
+const links = [
+    "https://i.imgur.com/nJdB00j.png",
+    "https://i.imgur.com/pLj6IR5.png",
+    "https://i.imgur.com/fcR8UU7.png",
+    "https://i.imgur.com/6Hw06Sk.png",
+    "https://i.imgur.com/8iUdkeQ.png"
+];
 const app = express();
 const port = 1935;
 
@@ -17,16 +24,40 @@ app.get('/', (req, res) => {
     res.render("index", {
         yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
         image: "https://i.imgur.com/pLj6IR5.png",
-        ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        link: ""
     });
 })
 
 app.post('/create', parser, (req, res) => {
+    if (!links.includes(req.body.images)) {
+        res.render("index", {
+            yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            image: "https://i.imgur.com/pLj6IR5.png",
+            ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            link:`<h1 style="color: red;">Invalid image!</h1>`
+        })
+        return;
+    }
+    if (!/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g.test(req.body.yt)) {
+        res.render("index", {
+            yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            image: "https://i.imgur.com/pLj6IR5.png",
+            ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            link:`<h1 style="color: red;">Invalid YouTube link!</h1>`
+        })
+        return;
+    }
     db.insert({
         image: req.body.images,
         youtube: req.body.yt
     }, (err, doc) => {
-        res.end("/get?id=" + doc._id)
+        res.render("index", {
+            yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+            image: "https://i.imgur.com/pLj6IR5.png",
+            ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            link:`<h1>Link: <a href="${req.headers.host}/get?id=${doc._id}">${req.headers.host}/get?id=${doc._id}</a></h1>`
+        })
     })
 })
 
