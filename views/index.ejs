@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<head>
+<meta property="og:type" content="video.other">
+<meta property="twitter:player" content="https://www.youtube.com/embed/<%= yt %>">
+<meta property="og:video:type" content="text/html">
+<meta property="og:video:width" content="900">
+<meta property="og:video:height" content="506">
+<meta name="twitter:image" content="<%= image %>">
+</head>
+<body>  
+    <form action="/create" method="POST">  
+    Image: <select name="images" id="image">
+        <option value="https://i.imgur.com/nJdB00j.png">Fortnite</option>
+        <option value="https://i.imgur.com/pLj6IR5.png">Minecraft</option>
+        <option value="https://i.imgur.com/fcR8UU7.png">Roblox</option>
+        <option value="https://i.imgur.com/6Hw06Sk.png">COD: Warzone</option>
+      </select>  <br>  
+    Youtube Link: <input type="text" name="yt">  
+    <input type="submit" value="Submit">  
+    </form>  
+    </body>
