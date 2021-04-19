@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                text-align: center;
+                background-color: #121212;
+                color:white;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+            div {
+                border-radius: 10px;
+                border: white solid;
+                width: 10%;
+                padding: 30px;
+                margin: auto;
+            }
+            canvas {
+                background-color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <noscript>Previewing doesn't work, because you have Javascript disabled.</noscript>
+        <canvas id="generatedImage" width="1250" height="703"></canvas>
+        <div>
+            <form action="/generator" method="POST" encType="multipart/form-data">
+                <input type="file" name="image" id="image" required/> 
+                <br>
+                <input type="button" value="Preview" onclick="generate(document.querySelector('#image').files[0])"/>
+                <br>
+                <br>
+                <input type="text" name="youtubeLink" placeholder="Youtube Link" required/>
+                <br>
+                <input type="submit" value="Generate HTML Code"/>
+            </form>
+        </div>
+        <script>
+            let canvas = document.getElementById("generatedImage"),
+            context = canvas.getContext("2d");
+
+            function renderStuff() {
+                discord_games = new Image();
+                discord_games.crossOrigin = "anonymous";
+                discord_games.src = "disc_games.png";
+                discord_games.onload = () => {
+                    context.drawImage(discord_games, 0, 618);
+                }
+                center = new Image();
+                center.crossOrigin = "anonymous";
+                center.src = "center.png";
+                center.onload = () => {
+                    context.drawImage(center, 502, 273);
+                }
+            }
+
+            renderStuff()
+            
+            function generate(img, url) {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                image = new FileReader();
+                image.onload = () => {
+                    localImage = new Image();
+                    localImage.crossOrigin = "anonymous";
+                    localImage.src = image.result;
+                    localImage.onload = () => {
+                        context.drawImage(localImage, 0, 0, 1250, 703);
+                        renderStuff()
+                    }
+                };
+                image.readAsDataURL(img);
+            }
+        </script>
+    </body>
+</html>
