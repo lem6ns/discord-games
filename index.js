@@ -61,7 +61,7 @@ async function generate(image) {
     //draw
     ctx.drawImage(game, 0, 0, 1250, 703)
     ctx.drawImage(footer, 0, 618);
-    ctx.drawImage(center, 501, 273);
+    ctx.drawImage(center, 498, 273);
 
     //upload
     let body = new FormData()
