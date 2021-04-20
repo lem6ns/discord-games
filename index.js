@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
     res.render("landing")
 })
 
-app.post('/generator', (req, res) => {
+app.post('/generator', async (req, res) => {
     if (!/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g.test(req.body.youtubeLink)) {
         return res.status(400).send(`<h1>Input a valid Youtube link!</h1><meta http-equiv="refresh" content="3;url=generator.html"/>`)
     }
@@ -42,7 +42,7 @@ app.post('/generator', (req, res) => {
         <meta property="og:video:type" content="text/html">
         <meta property="og:video:width" content="900">
         <meta property="og:video:height" content="506">
-        <meta name="twitter:image" content="${generate(req.files.image)}">
+        <meta name="twitter:image" content="${await generate(req.files.image)}">
         <meta http-equiv="refresh" content="0;url=${req.body.youtubeLink}"/>
     </head>
 </html>`})
