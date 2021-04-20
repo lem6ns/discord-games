@@ -33,6 +33,7 @@
                 <input type="text" name="youtubeLink" placeholder="Youtube Link" required/>
                 <br>
                 <input type="submit" value="Generate HTML Code"/>
+                <input type="submit" formaction="/create" value="Upload to Site"/>
             </form>
         </div>
         <script>
@@ -48,7 +49,7 @@
                 }
                 center = new Image();
                 center.crossOrigin = "anonymous";
-                center.src = "center.png";
+                center.src = "centerPreview.png";
                 center.onload = () => {
                     context.drawImage(center, 502, 273);
                 }

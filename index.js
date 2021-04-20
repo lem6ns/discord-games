@@ -12,15 +12,6 @@ const db = new Datastore({
     filename: "links",
     autoload: true
 });
-const links = [
-    "https://i.imgur.com/nJdB00j.png",
-    "https://i.imgur.com/pLj6IR5.png",
-    "https://i.imgur.com/fcR8UU7.png",
-    "https://i.imgur.com/6Hw06Sk.png",
-    "https://i.imgur.com/8iUdkeQ.png",
-    "https://i.imgur.com/i6J45b8.png",
-    "https://i.imgur.com/7hiWShe.png"
-];
 const app = express();
 const port = 1935;
 
@@ -42,29 +33,8 @@ app.post('/generator', (req, res) => {
     if (!req.files.image) {
         return res.status(400).send(`<h1>lol</h1><meta http-equiv="refresh" content="3;url=generator.html"/>`)
     }
-    const canvas = createCanvas(1250, 703)
-    const ctx = canvas.getContext("2d");
-    
-    const renderStuff = async () => {
-        loadImage("public/disc_games.png").then(i=>{
-            ctx.drawImage(i, 0, 618);
-        })
-        const center = await loadImage("public/center.png").then(i=>{
-            ctx.drawImage(i, 502, 273);
-        })
-        let body = new FormData()
-        body.append("image", canvas.toDataURL().split(',')[1])
-        fetch("https://api.imgur.com/3/image", {
-            method: "POST",
-            headers: {
-                    "Authorization": "Client-ID 5fae4323a27c0cf",
-                    "Content-Length": canvas.toDataURL().split(',')[1].length
-            },
-            body: body,
-            redirect: "follow"
-        }).then(r=>r.json()).then(json=>{
-            res.render("generator", {
-                embed: `<!DOCTYPE html>
+    res.render("generator", {
+        embed: `<!DOCTYPE html>
 <html>
     <head>
         <meta property="og:type" content="video.other">
@@ -72,46 +42,63 @@ app.post('/generator', (req, res) => {
         <meta property="og:video:type" content="text/html">
         <meta property="og:video:width" content="900">
         <meta property="og:video:height" content="506">
-        <meta name="twitter:image" content="${json.data.link}">
+        <meta name="twitter:image" content="${generate(req.files.image)}">
         <meta http-equiv="refresh" content="0;url=${req.body.youtubeLink}"/>
     </head>
 </html>`})
-        })
-    }
-    loadImage(req.files.image.tempFilePath).then(i=>{
-        ctx.drawImage(i, 0, 0, 1250, 703);
-        renderStuff();
-    })
 })
 
-app.post('/create', parser, (req, res) => {
-    if (!links.includes(req.body.images)) {
+async function generate(image) {
+    //init
+    const canvas = createCanvas(1250, 703)
+    const ctx = canvas.getContext("2d");
+    
+    //load images
+    const game = await loadImage(image.tempFilePath)
+    const footer = await loadImage("public/disc_games.png");
+    const center = await loadImage("public/center.png")
+    
+    //draw
+    ctx.drawImage(game, 0, 0, 1250, 703)
+    ctx.drawImage(footer, 0, 618);
+    ctx.drawImage(center, 502, 273);
+
+    //upload
+    let body = new FormData()
+    body.append("image", canvas.toDataURL().split(',')[1])
+    let upload = await fetch("https://api.imgur.com/3/image", {method: "POST",headers: {"Authorization": "Client-ID 5fae4323a27c0cf","Content-Length": canvas.toDataURL().split(',')[1].length},body: body,redirect: "follow"}).then(r=>r.json())
+    return upload.data.link;
+}
+
+app.post('/create', parser, async (req, res) => {
+    if (!/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g.test(req.body.youtubeLink)) {
         res.render("index", {
             yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
             image: "https://i.imgur.com/pLj6IR5.png",
-            ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            link:`<h1 style="color: red;">Invalid image!</h1>`
+            youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            link:`<h1 style="color: red;"> Invalid YouTube link! </h1>`
         })
         return;
     }
-    if (!/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/g.test(req.body.yt)) {
+    if (req.files && !req.body.image) req.body.image = await generate(req.files.image);
+    if (!req.body.image.startsWith("https://i.imgur.com/")) {
         res.render("index", {
             yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
             image: "https://i.imgur.com/pLj6IR5.png",
-            ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            link:`<h1 style="color: red;">Invalid YouTube link!</h1>`
+            youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            link:`<h1 style="color: red;"> Invalid image! </h1>`
         })
         return;
     }
     db.insert({
-        image: req.body.images,
-        youtube: req.body.yt
+        image: req.body.image,
+        youtube: req.body.youtubeLink
     }, (err, doc) => {
         res.render("index", {
             yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
             image: "https://i.imgur.com/pLj6IR5.png",
-            ytLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            link:`<h1>Link: <a href="https://${req.headers.host}/get?id=${doc._id}">${req.headers.host}/get?id=${doc._id}</a></h1>`
+            youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            link:`<h1>Link: <a href="http://${req.headers.host}/get?id=${doc._id}">${req.headers.host}/get?id=${doc._id}</a></h1>`
         })
     })
 })
@@ -120,12 +107,19 @@ app.get('/get', (req, res) => {
     db.findOne({
         _id: req.query.id
     }, function(err, doc) {
-        if (!doc) return;
+        if (!doc) {
+            return res.render("index", {
+                yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                image: "https://i.imgur.com/pLj6IR5.png",
+                youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                link:`<h1>Link: <a href="http://${req.headers.host}/get?id=${doc._id}">${req.headers.host}/get?id=${doc._id}</a></h1>`
+            })
+        }
         if (!req.get("User-Agent").includes("discord")) return res.redirect(doc.youtube);
         res.render("index", {
             yt: new URLSearchParams(new URL(doc.youtube).search).get("v"),
             image: doc.image,
-            ytLink: doc.youtube,
+            youtubeLink: doc.youtube,
             link: ""
         });
     })
