@@ -112,7 +112,7 @@ app.get('/get', (req, res) => {
                 yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
                 image: "https://i.imgur.com/pLj6IR5.png",
                 youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                link:`<h1>Link: <a href="http://${req.headers.host}/get?id=${doc._id}">${req.headers.host}/get?id=${doc._id}</a></h1>`
+                link:""
             })
         }
         if (!req.get("User-Agent").includes("discord")) return res.redirect(doc.youtube);
