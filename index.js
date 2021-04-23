@@ -73,7 +73,7 @@ async function generate(image) {
 app.post('/create', parser, async (req, res) => {
   if (!/^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?$/g.test(req.body.youtubeLink)) {
     res.render("index", {
-      yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      yt: "dQw4w9WgXcQ",
       image: "https://i.imgur.com/pLj6IR5.png",
       youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
       link: `<h1 style="color: red;"> Invalid YouTube link! </h1>`
@@ -83,7 +83,7 @@ app.post('/create', parser, async (req, res) => {
   if (req.files && !req.body.image) req.body.image = await generate(req.files.image);
   if (!req.body.image.startsWith("https://i.imgur.com/")) {
     res.render("index", {
-      yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      yt: "dQw4w9WgXcQ",
       image: "https://i.imgur.com/pLj6IR5.png",
       youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
       link: `<h1 style="color: red;"> Invalid image! </h1>`
@@ -95,7 +95,7 @@ app.post('/create', parser, async (req, res) => {
     youtube: req.body.youtubeLink
   }, (err, doc) => {
     res.render("index", {
-      yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      yt: "dQw4w9WgXcQ",
       image: "https://i.imgur.com/pLj6IR5.png",
       youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
       link: `<h1>Link: <a href="http://${req.headers.host}/get?id=${doc._id}">${req.headers.host}/get?id=${doc._id}</a></h1>`
@@ -109,7 +109,7 @@ app.get('/get', (req, res) => {
   }, function(err, doc) {
     if (!doc) {
       return res.render("index", {
-        yt: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        yt: "dQw4w9WgXcQ",
         image: "https://i.imgur.com/pLj6IR5.png",
         youtubeLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         link: ""
